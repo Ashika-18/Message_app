@@ -58,7 +58,7 @@ router.post('/add', (req, res, next) => {
         res.redirect('/boards');
     })
     .catch((err) => {
-        res.redirect('/boads/add');
+        res.redirect('/boards/add');
     })
 });
 
