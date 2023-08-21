@@ -9,10 +9,12 @@ const pnum = 5; //1ページ当たりの表示数
 //ログインのチェック
 const check = (req,res) => {
     if (req.session.login == null) {
-        req.session.back = '/boads';
+        req.session.back = '/boards';
         res.redirect('/users/login');
+        console.log('ログインしていない😱');
         return true;
     } else {
+        console.log('ログイン出来てる!😍');
         return false;
     }
 }
@@ -20,6 +22,7 @@ const check = (req,res) => {
 //トップページ
 router.get('/', (req, res, next) => {
     res.redirect('/boards/0');
+    console.log('-TOPページです!-')
 });
 
 //トップページにページ番号をつけてアクセス
@@ -28,7 +31,7 @@ router.get('/:page', (req, res, next) => {
     const pg = +req.params.page;
     prisma.Board.findMany({
         skip: pg * pnum,
-        teke: pnum,
+        take: pnum,
         orderBy: [
             {createdAt: 'desc'}
         ],
@@ -87,8 +90,10 @@ router.get('/home/:user/:id/:page', (req, res, next) => {
             content: brds,
             page: pg
         }
-        res.render('boads/home', data);
+        res.render('boards/home', data);
     });
 });
+
+console.log('最後まで読み込みOK!');
 
 module.exports = router;

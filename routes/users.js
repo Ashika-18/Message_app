@@ -1,9 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+const ps = require('@prisma/client');
+const prisma = new ps.PrismaClient();
 
 /* GET users listing. */
 router.get('/login', (req, res, next) => {
-  var date = {
+  var data = {
     title: 'Users/Login',
     content: '名前とパスワードを入力して下さい。'
   }
