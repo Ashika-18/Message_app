@@ -37,4 +37,13 @@ router.post('/login', (req, res, next) => {
   })
 });
 
+//addの処理
+router.get('/add', (req, res, next) => {
+  var data = {
+    title: 'New User',
+    content: '名前とパスワードを入力して下さい。'
+  }
+  res.render('users/add', data);
+});
+
 module.exports = router;

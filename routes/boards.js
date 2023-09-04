@@ -67,7 +67,7 @@ router.post('/add', (req, res, next) => {
 
 //利用者のホーム
 router.get('/home/:user/:id/:page', (req, res, next) => {
-    if (check (req, res,)) {return};
+    if (check (req, res)) {return};
     const id = +req.params.id;
     const pg = +req.params.page;
     
