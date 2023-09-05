@@ -46,7 +46,7 @@ router.get('/add', (req, res, next) => {
   res.render('users/add', data);
 });
 
-//user/addの処理
+//user_addの処理
 router.post('/add', (req, res, next) => {
   // if (check(req, res)) {return};
   prisma.User.create({

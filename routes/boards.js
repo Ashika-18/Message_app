@@ -65,6 +65,22 @@ router.post('/add', (req, res, next) => {
     })
 });
 
+//メッセージの編集
+router.post('/add', (req, res, next) => {
+    if (check(req, res)) {return};
+    prisma.Board.update({
+        data:{
+            accountId: req.session.login.id,
+            message: req.body.msg
+        }
+    }).then(() => {
+        res.redirect('/boards');
+    })
+    .catch((err) => {
+        res.redirect('/boards/add');
+    })
+});
+
 //利用者のホーム
 router.get('/home/:user/:id/:page', (req, res, next) => {
     if (check (req, res)) {return};
