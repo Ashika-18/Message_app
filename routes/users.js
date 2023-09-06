@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+//validator
+const { check, validationResult } = require('express-validator');
+
 const ps = require('@prisma/client');
 const prisma = new ps.PrismaClient();
 
@@ -47,19 +50,37 @@ router.get('/add', (req, res, next) => {
 });
 
 //user_addの処理
-router.post('/add', (req, res, next) => {
-  // if (check(req, res)) {return};
+router.post('/add', [ 
+  check('name', 'NAME は必ず入力して下さい').notEmpty().escape(),
+  check('pass', 'PASSは必ず入力して下さい').notEmpty().escape()
+], (req, res, next) => {
+  const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        var result = '<ul class="text-danger">';
+        var result_arr = errors.array();
+        for(var n in result_arr) {
+          result += '<li>' + result_arr[n].msg + '</li>'
+        }
+        result += '</ul>';
+        var data = {
+          title: 'error',
+          content: result,
+          form: req.body
+        }; res.render('users/add', data);
+
+      } else {
   prisma.User.create({
       data:{
           name: req.body.name,
           pass: req.body.pass
       }
   }).then(() => {
-      res.redirect('/boards');
+      res.redirect('/users/login');
   })
   .catch((err) => {
       res.redirect('/users/add');
-  })
+  })}
 });
 
 module.exports = router;

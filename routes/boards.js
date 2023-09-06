@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const ps = require('@prisma/client');
+const { name } = require('../app');
 const prisma = new ps.PrismaClient();
 
 const pnum = 5; //1ページ当たりの表示数
@@ -15,6 +16,15 @@ const check = (req,res) => {
         return true;
     } else {
         console.log('ログイン出来てる!😍');
+        return false;
+    }
+}
+
+//メッセージとIDのチェック
+const msg_check = (req, res) => {
+    if (accountId == id) {
+        return true;
+    } else {
         return false;
     }
 }
@@ -66,18 +76,19 @@ router.post('/add', (req, res, next) => {
 });
 
 //メッセージの編集
-router.post('/add', (req, res, next) => {
-    if (check(req, res)) {return};
+router.post('boards/add', (req, res, next) => {
+    if (msg_check(req, res)) {return};
     prisma.Board.update({
         data:{
             accountId: req.session.login.id,
-            message: req.body.msg
+            message: req.body.msg,
+            userName: req.params.user,
         }
     }).then(() => {
-        res.redirect('/boards');
+        res.redirect('/boards/add', data);
     })
     .catch((err) => {
-        res.redirect('/boards/add');
+        res.redirect('/boards');
     })
 });
 
