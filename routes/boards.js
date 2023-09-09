@@ -25,7 +25,7 @@ const check_login = (req,res) => {
 
 //メッセージとIDのチェック
 const msg_check = (req, res) => {
-    if (accountId == id) {
+    if (accountId == id ) {
         return true;
     } else {
         return false;
@@ -43,7 +43,7 @@ router.get('/:page', (req, res, next) => {
     if (check_login(req, res)) { return };
     const pg = +req.params.page;
     prisma.Board.findMany({
-        skip: pg * pnum,
+        skip: pg > 0 ? (pg - 1) * pnum : 0,
         take: pnum,
         orderBy: [
             {createdAt: 'desc'}
@@ -64,7 +64,7 @@ router.get('/:page', (req, res, next) => {
 
 //メッセージフォームの送信処理
 router.post('/add', [
-    check('message', 'メッセージは必ず入力して下さい。').notEmpty().escape(),
+    check('message', 'メッセージは必ず入力して下さい。').notEmpty().escape()
 ],(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -77,7 +77,7 @@ router.post('/add', [
         var data = {
             title: 'Boards',
             content: result,
-            form: req.body,
+            form: req.body
         };
         res.render('users/login', data);
     } else {
@@ -97,20 +97,32 @@ router.post('/add', [
 });
 
 //メッセージの編集
-router.post('boards/add', (req, res, next) => {
-    if (msg_check(req, res)) {return};
-    prisma.Board.update({
-        data:{
-            accountId: req.session.login.id,
-            message: req.body.msg,
+router.post('/boards/edit/:user/:id/:page', (req, res, next) => {
+    if (check_login (req, res)) {return};
+    const id = +req.params.id;
+    const pg = +req.params.page;
+    
+    prisma.Board.findMany({
+        where: {accountId: id},
+        skip: pg * pnum,
+        take: pnum, 
+        orderBy: [
+            {createdAt: 'desc'}
+        ],
+        include: {
+            account: true,
+        },
+    }).then(brds => {
+        const data = {
+            title: '編集ページ',
+            login: req.session.login,
+            accountId: id,
             userName: req.params.user,
+            content: brds,
+            page: pg
         }
-    }).then(() => {
-        res.redirect('/boards/add', data);
-    })
-    .catch((err) => {
-        res.redirect('/boards');
-    })
+        res.render('boards/edit', data);
+    });
 });
 
 //利用者のホーム
