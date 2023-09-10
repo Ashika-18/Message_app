@@ -78,7 +78,7 @@ router.post('/add', [
           pass: req.body.pass
       }
   }).then(() => {
-      res.redirect('/boards', data);
+      res.redirect('/users/login');
   })
   .catch((err) => {
       res.redirect('/users/add');

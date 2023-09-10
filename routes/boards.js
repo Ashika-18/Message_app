@@ -13,7 +13,7 @@ const pnum = 5; //1ページ当たりの表示数
 //ログインのチェック
 const check_login = (req,res) => {
     if (req.session.login == null) {
-        req.session.back = '/board';
+        req.session.back = '/boards';
         res.redirect('/users/login');
         console.log('ログインしていない😱');
         return true;
@@ -64,7 +64,7 @@ router.get('/:page', (req, res, next) => {
 
 //メッセージフォームの送信処理
 router.post('/add', [
-    check('message', 'メッセージは必ず入力して下さい。').notEmpty().escape()
+    check('msg', 'メッセージは必ず入力して下さい。').notEmpty().escape()
 ],(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -85,10 +85,10 @@ router.post('/add', [
     prisma.Board.create({
         data:{
             accountId: req.session.login.id,
-            message: req.body.message
+            message: req.body.msg
         }
     }).then(() => {
-        res.redirect('/boards');
+        res.redirect('/boards/0');
     })
     .catch((err) => {
         console.error("エラーが発生しました:", err);
@@ -97,13 +97,13 @@ router.post('/add', [
         content: 'エラーが発生しました。もう一度試してください。',
         form: req.body
     };
-        res.render('/users/login');
+        res.redirect('/users/login');
     })
     }
 });
 
 //メッセージの編集
-router.post('/boards/edit/:user/:id/:page', (req, res, next) => {
+router.post('/edit/:user/:id/:page', (req, res, next) => {
     if (check_login (req, res)) {return};
     const id = +req.params.id;
     const pg = +req.params.page;
