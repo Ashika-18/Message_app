@@ -13,6 +13,7 @@ router.get('/login', (req, res, next) => {
     title: 'Users/Login',
     content: '名前とパスワードを入力して下さい。'
   }
+  console.log('名前とパス😎');
   res.render('users/login', data);
 });
 
@@ -27,7 +28,7 @@ router.post('/login', (req, res, next) => {
       req.session.login = usr[0];
       let back = req.session.back;
       if (back == null) {
-        back = '/';
+        back = '/boards', data;
       }
       res.redirect(back);
     } else {
@@ -35,6 +36,7 @@ router.post('/login', (req, res, next) => {
         title: 'Users/Login',
         content: '名前かパスワードに問題があります。再度入力して下さい！'
       }
+      console.log('errorやな😝');
       res.render('users/login', data);
     }
   })
@@ -76,7 +78,7 @@ router.post('/add', [
           pass: req.body.pass
       }
   }).then(() => {
-      res.redirect('/users/login');
+      res.redirect('/boards', data);
   })
   .catch((err) => {
       res.redirect('/users/add');

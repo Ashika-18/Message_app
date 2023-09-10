@@ -13,7 +13,7 @@ const pnum = 5; //1ページ当たりの表示数
 //ログインのチェック
 const check_login = (req,res) => {
     if (req.session.login == null) {
-        req.session.back = '/boards';
+        req.session.back = '/board';
         res.redirect('/users/login');
         console.log('ログインしていない😱');
         return true;
@@ -85,13 +85,19 @@ router.post('/add', [
     prisma.Board.create({
         data:{
             accountId: req.session.login.id,
-            message: req.body.msg
+            message: req.body.message
         }
     }).then(() => {
         res.redirect('/boards');
     })
     .catch((err) => {
-        res.redirect('/boards/add');
+        console.error("エラーが発生しました:", err);
+    var data = {
+        title: 'Boards',
+        content: 'エラーが発生しました。もう一度試してください。',
+        form: req.body
+    };
+        res.render('/users/login');
     })
     }
 });

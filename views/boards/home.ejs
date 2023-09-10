@@ -22,10 +22,10 @@
 
        <ul class="pagination justify-content-center">
         <li class="page_item">
-            <a href="/boards/home/<% userName %>/<% accountId %>/<% page - 1 %>" class="page-link">&lt;&lt; Prev</a>
+            <a href="/boards/home/<% userName %>/<% accountId %>/<%= page - 1 %>" class="page-link">&lt;&lt; Prev</a>
         </li>
         <li class="page-item">
-            <a href="/boards/home/<%= userName %>/<%= accountId %>/<% page + 1 %>" class="page-link">Next &gt;&gt;</a>
+            <a href="/boards/home/<%= userName %>/<%= accountId %>/<%= page + 1 %>" class="page-link">Next &gt;&gt;</a>
         </li>
        </ul>
     </div>
