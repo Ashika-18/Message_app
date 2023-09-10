@@ -10,6 +10,6 @@
         d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         %>
         <td class="col-3"><%= dstr %></td>
-        <td class="button"><a href="/boards/edit">編集</a>/<a href="/boards/delete">削除</a></td>
+        <td class="button"><a href="/boards/edit">編集</a>/<a class="" onclick="deleteMessage(messageId)" href="/boards/delete">削除</a></td>
     </tr>
 <% } %>

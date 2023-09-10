@@ -62,6 +62,35 @@ router.get('/:page', (req, res, next) => {
     });
 });
 
+//利用者のホーム
+router.get('/home/:user/:id/:page', (req, res, next) => {
+    if (check_login (req, res)) {return};
+    const id = +req.params.id;
+    const pg = +req.params.page;
+    
+    prisma.Board.findMany({
+        where: {accountId: id},
+        skip: pg * pnum,
+        take: pnum, 
+        orderBy: [
+            {createdAt: 'desc'}
+        ],
+        include: {
+            account: true,
+        },
+    }).then(brds => {
+        const data = {
+            title: 'Boards',
+            login: req.session.login,
+            accountId: id,
+            userName: req.params.user,
+            content: brds,
+            page: pg
+        }
+        res.render('boards/home', data);
+    });
+});
+
 //メッセージフォームの送信処理
 router.post('/add', [
     check('msg', 'メッセージは必ず入力して下さい。').notEmpty().escape()
@@ -102,63 +131,28 @@ router.post('/add', [
     }
 });
 
-//メッセージの編集
-router.post('/edit/:user/:id/:page', (req, res, next) => {
-    if (check_login (req, res)) {return};
-    const id = +req.params.id;
-    const pg = +req.params.page;
-    
-    prisma.Board.findMany({
-        where: {accountId: id},
-        skip: pg * pnum,
-        take: pnum, 
-        orderBy: [
-            {createdAt: 'desc'}
-        ],
-        include: {
-            account: true,
+// メッセージの削除
+router.post('/delete/:messageId', (req, res, next) => {
+    if (check_login(req, res)) { return; }
+
+    const messageId = +req.params.messageId;
+
+    prisma.Board.delete({
+        where: {
+            id: messageId,
         },
-    }).then(brds => {
-        const data = {
-            title: '編集ページ',
-            login: req.session.login,
-            accountId: id,
-            userName: req.params.user,
-            content: brds,
-            page: pg
-        }
-        res.render('boards/edit', data);
+    })
+    .then(() => {
+        // 削除成功をクライアントに通知
+        res.json({ success: true });
+    })
+    .catch((err) => {
+        console.error("削除エラー:", err);
+        // 削除失敗をクライアントに通知
+        res.json({ success: false });
     });
 });
 
-//利用者のホーム
-router.get('/home/:user/:id/:page', (req, res, next) => {
-    if (check_login (req, res)) {return};
-    const id = +req.params.id;
-    const pg = +req.params.page;
-    
-    prisma.Board.findMany({
-        where: {accountId: id},
-        skip: pg * pnum,
-        take: pnum, 
-        orderBy: [
-            {createdAt: 'desc'}
-        ],
-        include: {
-            account: true,
-        },
-    }).then(brds => {
-        const data = {
-            title: 'Boards',
-            login: req.session.login,
-            accountId: id,
-            userName: req.params.user,
-            content: brds,
-            page: pg
-        }
-        res.render('boards/home', data);
-    });
-});
 
 console.log('最後まで読み込みOK!');
 
