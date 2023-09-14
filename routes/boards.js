@@ -131,6 +131,33 @@ router.post('/add', [
     }
 });
 
+//メッセージの編集処理
+router.get('/edit/:id' , (req, res, next) => {
+    const id = req.params.id;
+    prisma.user.findUnique(
+        { where: { id:+id } }
+    ).then(usr => {
+        const data = {
+            title: 'Users/Edit',
+            user: usr
+        };
+        res.render('users/edit', dara);
+    });
+});
+
+router.post('/edit', (req, res, next) => {
+    const {id, msg} = req.body;
+    prisma.user.update({
+        where: { id: +id },
+        data: {
+            id : id,
+            msg : msg
+        }
+    }).then(() => {
+        res.redirect
+    });
+});
+
 // メッセージの削除
 router.post('/delete/:messageId', (req, res, next) => {
     if (check_login(req, res)) { return; }

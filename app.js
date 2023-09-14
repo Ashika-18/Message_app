@@ -21,6 +21,9 @@ var session_opt = {
 }
 app.use(session(session_opt));
 
+// 静的ファイルを提供するためにexpress.staticを使用
+app.use('/public', express.static(__dirname + '/public'));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
