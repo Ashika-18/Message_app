@@ -23,15 +23,6 @@ const check_login = (req,res) => {
     }
 }
 
-//メッセージとIDのチェック
-const msg_check = (req, res) => {
-    if (accountId == id ) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 //トップページ
 router.get('/', (req, res, next) => {
     res.redirect('/boards/0');
@@ -67,7 +58,8 @@ router.get('/home/:user/:id/:page', (req, res, next) => {
     if (check_login (req, res)) {return};
     const id = +req.params.id;
     const pg = +req.params.page;
-    
+    console.log(id);
+
     prisma.Board.findMany({
         where: {accountId: id},
         skip: pg * pnum,
@@ -87,6 +79,7 @@ router.get('/home/:user/:id/:page', (req, res, next) => {
             content: brds,
             page: pg
         }
+        // console.log(brds);
         res.render('boards/home', data);
     });
 });
@@ -131,54 +124,43 @@ router.post('/add', [
     }
 });
 
-//メッセージの編集処理
-router.get('/edit/:id' , (req, res, next) => {
-    const id = req.params.id;
-    prisma.user.findUnique(
-        { where: { id:+id } }
-    ).then(usr => {
-        const data = {
-            title: 'Users/Edit',
-            user: usr
-        };
-        res.render('users/edit', dara);
-    });
+// メッセージの編集処理
+router.get('/edit/id',( req, res, next) => {
+    const id = +req.params.id;
+    if (id) {
+        // id が存在する場合の処理
+        prisma.Board.findUnique({
+            where: {
+                id: +id
+            }
+        }).then(usr => {
+            const data = {
+                user: [usr]
+            };
+            res.render('boards/edit', data);
+        });
+    } else {
+        // id が存在しない場合の処理
+        res.status(404).send('😱IDが無い😱'); // または適切なエラーページを表示する処理
+    }
 });
+//このコードでは、req.params.id の値が存在しない場合、404 Not Found エラーを返す処理を追加しています。これにより、存在しない id にアクセスした場合にエラーをハンドリングできます。エラーが発生する原因を特定し、適切に処理できるようになります。
 
+//編集のPOST通信
 router.post('/edit', (req, res, next) => {
     const {id, msg} = req.body;
-    prisma.user.update({
-        where: { id: +id },
+    prisma.Board.update({
+        where: { id: +id},
         data: {
-            id : id,
-            msg : msg
+            msg: msg
         }
     }).then(() => {
-        res.redirect
-    });
+        res.redirect('boards');
+    })
 });
 
 // メッセージの削除
-router.post('/delete/:messageId', (req, res, next) => {
-    if (check_login(req, res)) { return; }
 
-    const messageId = +req.params.messageId;
-
-    prisma.Board.delete({
-        where: {
-            id: messageId,
-        },
-    })
-    .then(() => {
-        // 削除成功をクライアントに通知
-        res.json({ success: true });
-    })
-    .catch((err) => {
-        console.error("削除エラー:", err);
-        // 削除失敗をクライアントに通知
-        res.json({ success: false });
-    });
-});
 
 
 console.log('最後まで読み込みOK!');
