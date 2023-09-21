@@ -17,7 +17,7 @@
        <p class="h4"><%= userName %>'s messages.</p>
        <table class="table mt-5">
         <% for(let i in content) { %>
-        <%- include('home_data_item', {val:content[i]}) %>
+        <%- include('data_item', {val:content[i]}) %>
         <% } %>
        </table>
 

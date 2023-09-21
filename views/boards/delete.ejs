@@ -1,43 +1,30 @@
 <!DOCTYPE html>
-<!-- indexページ -->
+<!-- Deleteページ -->
 <html lang="ja">
 <head>
     <meta http-equiv="content-type" content="text/html"; charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Edit</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body class="container">
+    <script>console.log("brds.msg:", brds.msg);
+        console.log("brds:", brds);</script>
     <header>
-        <h1 class="display-4"><%= title %></h1>
+        <h1 class="display-4">Delete</h1>
     </header>
     <div role="main"> 
-        <p class="h4"><%= login.name %>.Delete</p>
-        <form action="/boards/add" method="POST">
-        <div class="row">
-            <div class="col-10">
-                <input type="text" name="msg" class="form-control">
+        <form action="/boards/delete" method="POST">
+            <input type="hidden" name="id" id="id" value="<%= brds.id %>">
+            <div class="row">
+                <div class="col-10">
+                    <textarea class="form-control" id="msg" name="msg"><%= brds.message %></textarea>
+                </div>
+                <input type="submit" value="削除" class="btn btn-primary col-2">
             </div>
-            <input type="submit" value="送信" class="btn btn-primary col-2">
-        </div>
        </form>
-
-       <table class="table mt-5">
-        <% for(let i in content) { %>
-        <%- include('data_item', {val: content[i]}) %>
-        <% } %>
-       </table>
-
-       <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <a href="/boards/<%= page - 1 %>" class="page-link">&lt;&lt; Prev</a>
-        </li>
-        <li class="page-item">
-            <a href="/boards/<%= page + 1 %>" class="page-link">Next &gt;&gt;</a>
-        </li>
-       </ul>
     </div>
-    <p class="mt-4"><a href="/users/login">&lt;&lt; Top へ戻る</a>
+    <p class="mt-4"><a href="/users/login">&lt;&lt; Top へ戻る</a></p>
 </body>
 </html>

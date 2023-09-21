@@ -125,25 +125,31 @@ router.post('/add', [
 });
 
 // メッセージの編集処理
-router.get('/edit/id',( req, res, next) => {
+router.get('/edit/:id', (req, res, next) => {
     const id = +req.params.id;
-    if (id) {
-        // id が存在する場合の処理
+    
+    if (!id) {
+        // id が存在しない場合の処理
+        res.status(404).send('😱IDが無い😱');
+    } else {
         prisma.Board.findUnique({
             where: {
                 id: +id
             }
-        }).then(usr => {
-            const data = {
-                user: [usr]
-            };
-            res.render('boards/edit', data);
+        }).then(brds => {
+            if (!brds) {
+                // id に対応するデータが存在しない場合の処理
+                res.status(404).send('😱指定されたIDのデータが存在しません😱');
+            } else {
+                const data = {
+                    brds: brds
+                };
+                res.render('boards/edit', data);
+            }
         });
-    } else {
-        // id が存在しない場合の処理
-        res.status(404).send('😱IDが無い😱'); // または適切なエラーページを表示する処理
     }
 });
+
 //このコードでは、req.params.id の値が存在しない場合、404 Not Found エラーを返す処理を追加しています。これにより、存在しない id にアクセスした場合にエラーをハンドリングできます。エラーが発生する原因を特定し、適切に処理できるようになります。
 
 //編集のPOST通信
@@ -155,13 +161,30 @@ router.post('/edit', (req, res, next) => {
             msg: msg
         }
     }).then(() => {
-        res.redirect('boards');
+        res.redirect('/boards', data);
     })
 });
 
 // メッセージの削除
+router.get('/delete/:id', (req, res, next) => {
+    const id = req.params.id;
+    prisma.Board.findUnique({
+        where: { id: +id }
+    }).then(brds => {
+        const data = {
+            brds: brds
+        };
+        res.render('boards/delete', data);
+    });
+});
 
-
+router.post('/delete', (req, res, next) => {
+    prisma.Board.delete({
+        where: { id: +req.body.id}
+    }).then(() => {
+        res.redirect('/boards');
+    });
+});
 
 console.log('最後まで読み込みOK!');
 
