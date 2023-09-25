@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body class="container">
-    <script>console.log("brds.msg:", brds.msg);
-        console.log("brds:", brds);</script>
     <header>
         <h1 class="display-4">Delete</h1>
     </header>
@@ -19,6 +17,7 @@
             <input type="hidden" name="id" id="id" value="<%= brds.id %>">
             <div class="row">
                 <div class="col-10">
+                    <p>brdsのIDは<%= brds.id %>ですよ😍</p>
                     <textarea class="form-control" id="msg" name="msg"><%= brds.message %></textarea>
                 </div>
                 <input type="submit" value="削除" class="btn btn-primary col-2">

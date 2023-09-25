@@ -141,16 +141,21 @@ router.get('/edit/:id', (req, res, next) => {
 
 //編集のPOST通信
 router.post('/edit', (req, res, next) => {
-    const {id, msg} = req.body;
+    const { id, msg } = req.body;
     prisma.Board.update({
-        where: { id: +id},
+        where: { id: +id },
         data: {
-            msg: msg
+            message: msg // "message"フィールドに更新したい値をセットする
         }
     }).then(() => {
-        res.redirect('/boards', data);
-    })
+        res.redirect('/boards'); // 編集後にリダイレクトするなどの処理を追加
+    }).catch(error => {
+        console.error("編集エラー:", error);
+        // エラーハンドリングを行う
+        res.redirect('/boards'); // エラーが発生した場合のリダイレクト先を設定
+    });
 });
+
 
 // メッセージの削除
 router.get('/delete/:id', (req, res, next) => {
