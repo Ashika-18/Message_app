@@ -1,15 +1,21 @@
+<style>
+    :root {
+        --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+    }
+</style>
+
 <% if (val != null) { %>
     <tr class="row">
         <th class="col-2">
             <a class="text-dark" href="/boards/home/<%= val.account.name %>/<%= val.accountId %>/0"><%= val.account.name %></a>
         </th>
-        <td class="col-7"><%= val.message %></td>
+        <td class="col-7 bg-secondary bg-gradient text-white d-block py-2"><%= val.message %></td>
         <%
         var d = new Date(val.createdAt);
         var dstr = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' +
         d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         %>
         <td class="col-3"><%= dstr %></td>
-        <td class="button"><a href="/boards/edit/<%= val.id %>">編集</a>/<a class=""href="/boards/delete/<%= val.id %>">削除</a>
+        <td><a class="btn btn-primary bg-gradient" role="button" href="/boards/edit/<%= val.id %>">編集</a>/<a class="btn btn-primary btn-danger bg-gradient" role="button" href="/boards/delete/<%= val.id %>">削除</a>
     </tr>
 <% } %>
