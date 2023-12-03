@@ -7,6 +7,7 @@
     <title>Edit</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="../../public/javascripts/main.js"></script>
 </head>
 <body class="container">
     <script>console.log("brds.msg:", brds.msg);
@@ -21,7 +22,7 @@
                 <div class="col-10">
                     <textarea class="form-control" id="msg" name="msg"><%= brds.message %></textarea>
                 </div>
-                <input type="submit" value="削除" class="btn btn-primary col-2">
+                <input type="submit" value="削除" class="btn btn-primary col-2" onClick="return confirmDelete(<%= brds.id %>)">
             </div>
        </form>
     </div>
