@@ -11,7 +11,7 @@ const prisma = new ps.PrismaClient();
 router.get('/login', (req, res, next) => {
   var data = {
     title: 'Users/Login',
-    content: '名前とパスワードを入力して下さい。'
+    content: '名前とパスワードを入力して下さい!'
   }
   console.log('名前とパス😎');
   res.render('users/login', data);
