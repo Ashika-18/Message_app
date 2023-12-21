@@ -5,7 +5,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 
 const ps = require('@prisma/client');
-const { name } = require('../app');
+// const { name } = require('../app');
 const prisma = new ps.PrismaClient();
 
 const pnum = 5; //1ページ当たりの表示数
