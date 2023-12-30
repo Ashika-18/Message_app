@@ -173,6 +173,6 @@ router.post('/delete', (req, res, next) => {
     });
 });
 
-console.log('最後まで読み込みOK!');
+console.log('boards.js読み込みOK!');
 
 module.exports = router;
